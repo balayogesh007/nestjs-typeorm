@@ -1,5 +1,6 @@
 import { registerAs } from '@nestjs/config';
 import devDbConfig from './dev.config';
+import { join } from 'path';
 // import { CognitoService } from 'src/aws/cognito/cognito.service';
 
 export default registerAs('typeOrmConfig', async () => {
@@ -24,11 +25,12 @@ export default registerAs('typeOrmConfig', async () => {
     password: data.password,
     database: data.dbname,
     autoLoadEntities: true,
-    entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+    entities: [join(__dirname, '/../**/*.entity{.ts,.js}')],
+    migrations: [join(__dirname, '/../migrations/*{.ts,.js}')],
+    migrationsTableName: 'typeorm_migrations',
     subscribers: [__dirname + '/../**/*.subscriber{.ts,.js}'],
-    migrations: [__dirname + '/../database/migrations/**/*{.ts,.js}'],
     cli: {
-      migrationsDir: __dirname + '/../database/migrations',
+      migrationsDir: __dirname + '/../migrations',
     },
     synchronize: process.env.DB_SYNC === 'true',
     logging: true,
